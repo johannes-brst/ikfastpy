@@ -1,0 +1,12 @@
+Joint 0: 0.499987
+Joint 1: -1.700018
+Joint 2: 1.500019
+Joint 3: 1.300016
+Joint 4: 1.199996
+Joint 5: 2.600016
+TCP offset x: -0.177662
+TCP offset y: -0.316153
+TCP offset z: 0.484088
+TCP offset rx: -0.634035
+TCP offset ry: -2.859795
+TCP offset rz: 0.880660
