@@ -48,4 +48,4 @@ def rodrigues(r):
         R = eye(3) + (1-theta2/6.)*Sr + (.5-theta2/24.)*dot(Sr,Sr)
     return mat(R)
 
-print(rodrigues([0.407472,-0.514621,1.770498]))
+print(rodrigues([1.914787, -0.006242,-0.037102]))

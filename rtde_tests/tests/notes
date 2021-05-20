@@ -1,0 +1,23 @@
+[[ 1.         -0.          0.         -0.81725001]
+ [ 0.          0.         -1.         -0.19145   ]
+ [ 0.          1.         -0.         -0.005491  ]]
+
+<translation>0 0.0 0.0</translation> <!-- end effector offset can be added here -->
+[[ 1.         -0.          0.         -0.71700001]
+ [ 0.          0.         -1.         -0.234     ]
+ [ 0.          1.         -0.         -0.037     ]]
+
+<translation>0 0.10 0.0</translation> <!-- end effector offset can be added here -->
+[[ 1.         -0.          0.         -0.81699997]
+ [ 0.          0.         -1.         -0.234     ]
+ [ 0.          1.         -0.          0.063     ]]
+
+<translation>0.0 0.16 0.0</translation> 
+[[ 1.         -0.          0.         -0.81699997]
+ [ 0.          0.         -1.         -0.294     ]
+ [ 0.          1.         -0.          0.063     ]]
+
+
+TCP offset x: -0.817200
+TCP offset y: -0.292900
+TCP offset z: 0.062800

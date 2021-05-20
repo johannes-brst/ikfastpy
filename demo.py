@@ -5,7 +5,7 @@ import ikfastpy
 ur5_kin = ikfastpy.PyKinematics()
 n_joints = ur5_kin.getDOF()
 
-joint_angles = [1.6, -2, 2, -1, 1.58, 1.8] # in radians
+joint_angles = [0.755020, -2.131027, 2.141150,  0.456918,  0.842970, -0.346717] # in radians
 
 # Test forward kinematics: get end effector pose from joint angles
 print("\nTesting forward kinematics:\n")

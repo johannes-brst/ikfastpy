@@ -16,7 +16,7 @@
 
   <Body name="link1" type="dynamic">
     <offsetfrom>link0</offsetfrom>
-    <translation>0 -0.0 0.1625</translation>
+    <translation>0 -0.138 0.163</translation>
     <quat>0 -0.7071 0 0.7071</quat>
     <Geom type="box">
       <translation>0 0 0</translation>
@@ -38,7 +38,7 @@
 
   <Body name="link2" type="dynamic">
     <offsetfrom>link1</offsetfrom>
-    <translation>0 -0.138 0.007</translation>
+    <translation>0 -0.131 0.425</translation>
     <rotationaxis>1 0 0 0</rotationaxis>
     <Geom type="box">
       <translation>0 0 0</translation>
@@ -60,7 +60,7 @@
 
   <Body name="link3" type="dynamic">
     <offsetfrom>link2</offsetfrom>
-    <translation>0 -0.007 -0.127</translation>
+    <translation>0 0 0.392</translation>
     <rotationaxis>1 0 0 0</rotationaxis>
     <Geom type="box">
       <translation>0 0 0</translation>
@@ -82,7 +82,7 @@
 
   <Body name="link4" type="dynamic">
     <offsetfrom>link3</offsetfrom>
-    <translation>0 0.127 -0.0997</translation>
+    <translation>0 0.127 0</translation>
     <rotationaxis>0 1 0 90</rotationaxis>
     <Geom type="box">
       <translation>0 0 0</translation>
@@ -104,7 +104,7 @@
 
   <Body name="link5" type="dynamic">
     <offsetfrom>link4</offsetfrom>
-    <translation>0 0 0.0997</translation>
+    <translation>0 0 0.100</translation>
     <rotationaxis>1 0 0 0</rotationaxis>
     <Geom type="box">
       <translation>0 0 0</translation>
@@ -126,7 +126,7 @@
 
   <Body name="link6" type="dynamic">
     <offsetfrom>link5</offsetfrom>
-    <translation>-0.01 0.0989 0</translation> <!-- end effector offset can be added here -->
+    <translation>0.0 0.16 0.0</translation> <!-- end effector offset can be added here -->
     <rotationaxis>-1 0 0 90</rotationaxis>
     <Geom type="box">
       <translation>0 0 0</translation>

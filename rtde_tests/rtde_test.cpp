@@ -14,11 +14,11 @@ template <typename T> int sgn(T val) {
 int main(int argc, char *argv[])
 {
     float sT = 0.002; //sample Time
-    RTDEControlInterface rtde_control("172.30.10.1");//172.30.10.1
-    RTDEReceiveInterface rtde_receive("172.30.10.1");
+    RTDEControlInterface rtde_control("127.0.0.1");//172.30.10.1
+    RTDEReceiveInterface rtde_receive("127.0.0.1");
     std::vector<double> init_q = rtde_receive.getActualQ();
-    std::vector<double> startpos = {0.5, -1.7, 1.5, 1.3, 1.2, 2.6};
-    //rtde_control.moveJ(startpos);
+    std::vector<double> startpos = {0.755020, -2.131027, 2.141150,  0.456918,  0.842970, -0.346717};
+    rtde_control.moveJ(startpos);
     int steps = 2000;
     int max_vel = 3	;
     printf("Joint 0: %f\n",rtde_receive.getActualQ().at(0));
