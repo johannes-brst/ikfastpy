@@ -1,5 +1,9 @@
 import numpy as np
 import ikfastpy
+import rodrigues
+import rtde_control
+import rtde_receive
+import time
 
 # Initialize kinematics for UR5 robot arm
 ur5_kin = ikfastpy.PyKinematics()
@@ -29,3 +33,20 @@ for joint_config in joint_configs:
 # Check cycle-consistency of forward and inverse kinematics
 assert(np.any([np.sum(np.abs(joint_config-np.asarray(joint_angles))) < 1e-4 for joint_config in joint_configs]))
 print("\nTest passed!")
+
+
+rtde_c = rtde_control.RTDEControlInterface("127.0.0.1")
+rtde_r = rtde_receive.RTDEReceiveInterface("127.0.0.1")
+actual_q = rtde_r.getActualQ()
+print("actual_q: " + str(actual_q))
+for joint_config in joint_configs:
+    print("Moving to pose:")
+    print(joint_config)
+    rtde_c.moveJ(joint_config)
+    # anstatt von moveJ speedJ nutzen
+    # innnerhalb eines loop die joints solange bewegen lassen bis Zielwinkel erreicht ist
+    # ungefähr so wie in rtde_test.cpp
+    time.sleep(1)
+
+# Stop the RTDE control script
+rtde_c.stopScript()
