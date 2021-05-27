@@ -10,22 +10,12 @@ def newJointSpeed(joint_config, actual_q, joint_speed, max_vel):
     print("newJointSpeed")
     print("joint_config: "+str(joint_config))
     print("actual_q: "+str(actual_q))
+    tmp_speed = np.subtract(joint_config, actual_q)
     #TODO:"schnellste" Gelenk finden und als Faktor nutzen --> nur einzelnes Gelenk funktioniert bisher
-    for i in range(len(joint_config)):     
+    for i in range(len(joint_config)):
         #if(i == 1):   
-        if(abs(joint_config[i] - actual_q[i]) > 0.001):
-            if(joint_config[i] > 0 and actual_q[i] > 0):
-                if(joint_config[i] < actual_q[i]):
-                    joint_speed[i] = joint_config[i]*(-max_vel/max(joint_config))
-                else:
-                    joint_speed[i] = math.copysign(joint_config[i]*(max_vel/max(joint_config)), (joint_config[i] - actual_q[i])+actual_q[i])
-            elif(joint_config[i] < 0 and actual_q[i] < 0):
-                if(joint_config[i] > actual_q[i]):
-                    joint_speed[i] = joint_config[i]*(-max_vel/max(joint_config))
-                else:
-                    joint_speed[i] = math.copysign(joint_config[i]*(max_vel/max(joint_config)), (joint_config[i] - actual_q[i])+actual_q[i])
-            else:
-                joint_speed[i] = math.copysign(joint_config[i]*(max_vel/max(joint_config)), (joint_config[i] - actual_q[i])+actual_q[i])
+        if(abs(tmp_speed[i]) > 0.02):
+            joint_speed[i] = tmp_speed[i]*(max_vel/max(np.absolute(tmp_speed)))
         else:
             #if(abs(joint_config[i] - actual_q[i]) > 0.005):
             #    joint_speed[i] = joint_speed[i] * -1
@@ -81,7 +71,7 @@ print("actual_q: " + str(actual_q))
 joint_speed = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 dt = 0.02 #1.0/500 
 max_vel = 3.14
-acceleration = 0.5
+acceleration = 20
 joint_config = joint_configs[findClosestSolution(joint_configs,actual_q)]
 #for joint_config in joint_configs:
     #print("Moving to pose:")
