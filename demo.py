@@ -11,15 +11,10 @@ def newJointSpeed(joint_config, actual_q, joint_speed, max_vel):
     print("joint_config: "+str(joint_config))
     print("actual_q: "+str(actual_q))
     tmp_speed = np.subtract(joint_config, actual_q)
-    #TODO:"schnellste" Gelenk finden und als Faktor nutzen --> nur einzelnes Gelenk funktioniert bisher
     for i in range(len(joint_config)):
-        #if(i == 1):   
         if(abs(tmp_speed[i]) > 0.02):
             joint_speed[i] = tmp_speed[i]*(max_vel/max(np.absolute(tmp_speed)))
         else:
-            #if(abs(joint_config[i] - actual_q[i]) > 0.005):
-            #    joint_speed[i] = joint_speed[i] * -1
-            #else:
             joint_speed[i] = 0
     print("joint_speed: "+str(joint_speed))
     return joint_speed
@@ -65,13 +60,13 @@ print("\nTest passed!")
 
 rtde_c = rtde_control.RTDEControlInterface("127.0.0.1")
 rtde_r = rtde_receive.RTDEReceiveInterface("127.0.0.1")
-rtde_c.moveJ([0.555020, -1.131027, 2.141150,  0.456918,  0.842970, -0.346717])
+rtde_c.moveJ([1.755020, -1.131027, 2.141150,  0.456918,  0.842970, -0.346717])
 actual_q = rtde_r.getActualQ()
 print("actual_q: " + str(actual_q))
 joint_speed = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 dt = 0.02 #1.0/500 
 max_vel = 3.14
-acceleration = 20
+acceleration = 40
 joint_config = joint_configs[findClosestSolution(joint_configs,actual_q)]
 #for joint_config in joint_configs:
     #print("Moving to pose:")
