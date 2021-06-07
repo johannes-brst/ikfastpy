@@ -40,6 +40,8 @@ print("Joint angles:")
 print(joint_angles)
 ee_pose = ur5_kin.forward(joint_angles)
 ee_pose = np.asarray(ee_pose).reshape(3,4) # 3x4 rigid transformation matrix
+#ee_pose = np.asarray([[0.9994 , 0.013, -0.028,  -0.00],[-0.022 ,-0.3375, -0.9410,  -0.330],[-0.02284,  0.9411, -0.3370,  3.375]]).reshape(3,4)
+
 print("\nEnd effector pose:")
 print(ee_pose)
 print("\n-----------------------------")
@@ -74,9 +76,6 @@ joint_config = joint_configs[findClosestSolution(joint_configs,actual_q)]
     #rtde_c.moveJ(joint_config)
     #time.sleep(1)
     
-    # TODO: endloses Pendeln über Ziel Winkel. Schaukelt sich immer stärker auf
-    # hohe wahrscheinlichkeit das endeffektor an andere Stelle am Roboter hängen bleibt
-    # wegen unkoordinierten verhalten ohne collisions berücksichtigung 
 actual_q = rtde_r.getActualQ()
 joint_speed = newJointSpeed(joint_config, actual_q, joint_speed, max_vel)
 is_all_zero = np.all((joint_speed == 0))
