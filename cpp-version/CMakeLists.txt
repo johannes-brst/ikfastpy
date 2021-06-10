@@ -22,13 +22,16 @@ target_link_libraries(Kinematics BLAS LAPACK)
 find_package(ur_rtde REQUIRED)
 
 add_executable(demo demo.cpp)
+add_executable(calculate_kinematics calculate_kinematics.cpp)
 
 #target_link_libraries(ikfast_wrapper Kinematics ${lapackblas_libraries}) 
 target_link_libraries(demo PRIVATE ur_rtde::rtde Kinematics) 
+target_link_libraries(calculate_kinematics PRIVATE ur_rtde::rtde Kinematics) 
 
-# add the binary tree to the search path for include files
-# so that we will find TutorialConfig.h
 target_include_directories(demo PUBLIC
+                          "${PROJECT_BINARY_DIR}"
+                          )
+target_include_directories(calculate_kinematics PUBLIC
                           "${PROJECT_BINARY_DIR}"
                           )
 

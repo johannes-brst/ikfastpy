@@ -10,6 +10,8 @@ using namespace ur_rtde;
 using namespace std::chrono;
 using namespace robots; 
 
+std::vector<double> solutions[8];
+
 template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
@@ -38,22 +40,22 @@ std::string vec2csv(const std::vector<T>& vec) {
 
 template<typename T>
 std::vector<float> vecSubtract(const std::vector<T>& vec1, const std::vector<T>& vec2) {
-    std::vector<float> result = {0,0,0,0,0,0};
+    std::vector<float> result = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
   for (int i = 0; i <  vec1.size(); ++i) {
       result[i] = vec1[i] - vec2[i];
   }
   return result;
 }
 
-int findClosestSolution(std::vector<double> *solutions, std::vector<double> actual_q)
+int findClosestSolution(std::vector<double> actual_q)
 {
     printf("findClosestSolution\n");
     int index_min = 0;
-    float min = 999;
-    float difference = 0;
+    float min = 999.0f;
+    float difference = 0.0f;
     for(int i = 0; i < 8; i++){
         if(sizeof(solutions[i]) > 1){
-            difference = 0;
+            difference = 0.0f;
             for(int j = 0; j < actual_q.size()-1; j++){
                 difference += std::abs(solutions[i][j] - actual_q[j]);
             }
@@ -72,12 +74,12 @@ std::vector<double> newJointSpeed(std::vector<double> joint_config, std::vector<
 {
     //printf("newJointSpeed\n");
     std::vector<float> tmp_speed = vecSubtract(joint_config, actual_q);
-    std::vector<float> abs_tmp_speed= {0,0,0,0,0,0};
+    std::vector<float> abs_tmp_speed= {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
     for(int i = 0; i < tmp_speed.size() - 1; i++){
         abs_tmp_speed[i] = std::abs(tmp_speed[i]);
     }
-    for(int i = 0; i < joint_config.size() - 1; i++){
-        if(std::abs(tmp_speed[i]) > 0.02){
+    for(int i = 0; i < joint_config.size() ; i++){
+        if(std::abs(tmp_speed[i]) > 0.02f){
             joint_speed[i] = tmp_speed[i]*(max_vel/ *max_element(abs_tmp_speed.begin(),abs_tmp_speed.end()));
         }
         else{
@@ -88,25 +90,9 @@ std::vector<double> newJointSpeed(std::vector<double> joint_config, std::vector<
     return joint_speed;
 }
 
-
-int main(int argc, char *argv[])
-{
+void calculateKinematics(std::vector<float> ee_pose){
     Kinematics ur5e_kin;
     int n_joints = ur5e_kin.num_of_joints;
-    printf("n_joints = %i\n",n_joints);
-    // Test forward kinematics: get end effector pose from joint angles
-    std::vector<float> joint_angles = {0.755020, -2.131027, 2.141150,  0.456918,  0.842970, -0.346717};
-
-    printf("Joint angles:\n");
-    for (int i = 0; i <= n_joints - 1; i++) 
-        std::cout << joint_angles[i] << " ";
-    printf("\n");
-    //std::vector<float> ee_pose = ur5e_kin.forward(joint_angles);
-
-    std::vector<float> ee_pose = { 0.99948378, 0.01387675, -0.02897591 , -0.000905,
- -0.02259421 ,-0.33758036 ,-0.94102551  ,-0.330611,
- -0.02284007,  0.94119442 ,-0.33709256  ,0.375722};
-
     std::vector<float> joint_configs = ur5e_kin.inverse(ee_pose);
 
     printf("\n");
@@ -119,7 +105,6 @@ int main(int argc, char *argv[])
     std::vector<double> sol6 =  {0};
     std::vector<double> sol7 =  {0};
     std::vector<double> sol8 =  {0};
-    std::vector<double> solutions[8];
 
     for (int i = 0; i <= joint_configs.size() - 1; i++){
         if(i < 6){
@@ -170,26 +155,37 @@ int main(int argc, char *argv[])
         //printf("%i", j);
         printf("\n");
     }
- 
+    return;
+}
+
+void moveArm(std::string ip, std::vector<float> ee_pose){
+
+    calculateKinematics(ee_pose);
     printf("\n");
+
     float sT = 0.02; //sample Time
-    RTDEControlInterface rtde_control("127.0.0.1");//172.30.10.1
-    RTDEReceiveInterface rtde_receive("127.0.0.1");
+    RTDEControlInterface rtde_control(ip);
+    RTDEReceiveInterface rtde_receive(ip);
     std::vector<double> actual_q = rtde_receive.getActualQ();
-    std::vector<double> startpos = {1.755020, -1.131027, 2.141150,  0.456918,  0.842970, -0.346717};
-    std::vector<double> joint_speed = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    rtde_control.moveJ(startpos);
-    std::vector<double> goal = solutions[findClosestSolution(solutions, actual_q)];
     
-    float max_vel = 3.14;
-    float acceleration = 40;
-    float dt = 0.02;
+    std::vector<double> joint_speed = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};    
+    
+    std::vector<double> goal = solutions[findClosestSolution(actual_q)];
+    
+    float max_vel = 3.14f;
+    float acceleration = 40.0f;
+    float dt = 0.02f;
     actual_q = rtde_receive.getActualQ();
+
+    printf("current joint angles:\n");
+    for (int i = 0; i <= actual_q.size() - 1; i++) 
+        std::cout << actual_q[i] << " ";
+    printf("\n");
     joint_speed = newJointSpeed(goal, actual_q, joint_speed, max_vel);
 
     bool is_all_zero = true;
     for(int i = 0; i < joint_speed.size(); i++){
-        if(joint_speed[i] != 0){
+        if(joint_speed[i] != 0.0f){
             is_all_zero = false;
             break;
         }
@@ -197,27 +193,60 @@ int main(int argc, char *argv[])
 
     while(is_all_zero == false){
         auto t_start = high_resolution_clock::now();
+
 		rtde_control.speedJ(joint_speed, acceleration,dt);
+
 		auto t_stop = high_resolution_clock::now();
     	auto t_duration = std::chrono::duration<double>(t_stop - t_start);
+
 		if (t_duration.count() < sT)
 		{
 			std::this_thread::sleep_for(std::chrono::duration<double>(sT - t_duration.count()));
 		}
+
         actual_q = rtde_receive.getActualQ();
         joint_speed = newJointSpeed(goal, actual_q, joint_speed, max_vel);
 
         is_all_zero = true;
         for(int i = 0; i < joint_speed.size(); i++){
-            if(joint_speed[i] != 0){
+            if(joint_speed[i] != 0.0f){
                 is_all_zero = false;
                 break;
             }
         }
     }
 
+    rtde_control.speedJ({0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, acceleration,dt);
+    actual_q = rtde_receive.getActualQ();
+
+    printf("reached joint angles:\n");
+    for (int i = 0; i <= actual_q.size() - 1; i++) 
+        std::cout << actual_q[i] << " ";
+    printf("\n");
+
 	rtde_control.speedStop();
     rtde_control.stopScript();
-	rtde_receive.disconnect();
+	rtde_receive.disconnect();  
+}
+
+
+int main(int argc, char *argv[])
+{
+
+    // TODO: rodrigues calculation in cpp for rotation vector -> rotation matrix
+    //std::vector<float> ee_pose = { 0.99948378f, 0.01387675f, -0.02897591f, -0.000905f,
+    //-0.02259421f ,-0.33758036f ,-0.94102551f  ,-0.330611f,
+    //-0.02284007f,  0.94119442f ,-0.33709256f  ,0.375722f};
+
+    // alternativly for testing use the forward calcution from ikfast: 
+    Kinematics ur5e_kin;
+    int n_joints = ur5e_kin.num_of_joints;
+
+    //wished end position
+    std::vector<float> joint_angles = {0.755020, -2.131027, 2.141150,  0.456918,  0.842970, -0.346717};
+
+    std::vector<float> ee_pose = ur5e_kin.forward(joint_angles);
+
+    moveArm("127.0.0.1", ee_pose);
     return 0;
 }
