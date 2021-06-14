@@ -77,8 +77,13 @@ std::vector<double> newJointSpeed(std::vector<double> joint_config, std::vector<
         abs_tmp_speed[i] = std::abs(tmp_speed[i]);
     }
     for(int i = 0; i < joint_config.size() - 1; i++){
-        if(std::abs(tmp_speed[i]) > 0.02){
-            joint_speed[i] = tmp_speed[i]*(max_vel/ *max_element(abs_tmp_speed.begin(),abs_tmp_speed.end()));
+        if(tmp_speed[i]> 0.02){
+            if(tmp_speed[i] > 3.14){
+                joint_speed[i] = tmp_speed[i]*(max_vel/ *max_element(abs_tmp_speed.begin(),abs_tmp_speed.end()));
+            }
+            else{
+                joint_speed[i] = tmp_speed[i];
+            }
         }
         else{
             joint_speed[i] = 0.0f;
