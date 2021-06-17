@@ -80,7 +80,7 @@ std::vector<double> newJointSpeed(std::vector<double> joint_config, std::vector<
     }
     for(int i = 0; i < joint_config.size() ; i++){
         if(std::abs(tmp_speed[i]) > 0.002f){
-            joint_speed[i] = tmp_speed[i];
+            joint_speed[i] = std::min(tmp_speed[i]*5,max_vel);
             if(*max_element(abs_tmp_speed.begin(),abs_tmp_speed.end()) > 3.14f){
                 joint_speed[i] = tmp_speed[i]*(max_vel/ *max_element(abs_tmp_speed.begin(),abs_tmp_speed.end()));
             }
@@ -169,6 +169,9 @@ void moveArm(std::string ip, std::vector<float> ee_pose){
     float sT = 0.002; //sample Time
     RTDEControlInterface rtde_control(ip);
     RTDEReceiveInterface rtde_receive(ip);
+    //std::vector<double> startpos = {1.755020, -1.131027, 2.141150,  0.456918,  0.842970, -0.346717};
+    //rtde_control.moveJ(startpos);
+
     std::vector<double> actual_q = rtde_receive.getActualQ();
     
     std::vector<double> joint_speed = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};    
