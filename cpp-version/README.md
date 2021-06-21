@@ -1,7 +1,10 @@
 needed:
 
-sudo apt-get install libblas-dev liblapack-dev
+- sudo apt-get install libblas-dev liblapack-dev
+- 
 
-modify CMakeLists.txt to match installtion path of library:
+in case of errors:
 
-use  dpkg -L <package> to look up path
+  - modify CMakeLists.txt to match installtion path of library
+
+  - use  dpkg -L <package> to look up path
