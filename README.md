@@ -1,3 +1,21 @@
+Added a version in cpp. 
+
+It works pretty much the same way as the original. 
+
+I used the following installtion for openrave:
+https://roboticslab-uc3m.github.io/installation-guides/install-openrave.html
+
+After making changes to the xml file remeber to... :
+1. Use OpenRave to re-generate the IKFast C++ code `ikfast61.cpp`. 
+    ```shell
+    python `openrave-config --python-dir`/openravepy/_openravepy_/ikfast.py --robot=../ur5e.robot.xml --iktype=transform6d --baselink=0 --eelink=6 --savefile=ikfast61.cpp --maxcasedepth 1
+    ```
+
+
+---
+
+#  ***************** Original README Below ***************** 
+
 # IKFastPy - UR5 IKFast Python Package
 
 <img src="images/closed-loop-grasping.gif" height=200px align="right" />
