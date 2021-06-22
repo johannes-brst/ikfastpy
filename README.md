@@ -3,7 +3,17 @@ Added a version in cpp.
 It works pretty much the same way as the original. 
 
 I used the following installtion for openrave:
-https://roboticslab-uc3m.github.io/installation-guides/install-openrave.html
+https://roboticslab-uc3m.github.io/installation-guides/install-openrave.html'
+
+needed:
+
+- sudo apt-get install libblas-dev liblapack-dev
+
+in case of errors:
+
+  - modify CMakeLists.txt to match installtion path of library
+
+  - use  dpkg -L <package> to look up path
 
 After making changes to the xml file remeber to... :
 1. Use OpenRave to re-generate the IKFast C++ code `ikfast61.cpp`. 
