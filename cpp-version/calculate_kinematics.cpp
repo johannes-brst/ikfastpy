@@ -90,6 +90,8 @@ int findClosestSolution(std::vector<double> actual_q)
     return index_min;
 }
 
+/* calculates new joint speed based on max velocity and remaining angle difference.
+If no joint has a distance more than 3.14 the joint speed equals the difference from actual to goal (per joint) multiplied by a constant*/
 std::vector<double> newJointSpeed(std::vector<double> joint_config, std::vector<double> actual_q, std::vector<double> joint_speed, double max_vel)
 {
     //printf("newJointSpeed\n");
@@ -113,6 +115,7 @@ std::vector<double> newJointSpeed(std::vector<double> joint_config, std::vector<
     return joint_speed;
 }
 
+/*calculate kinematics and gather all solutions*/
 void calculateKinematics(std::vector<float> ee_pose){
     Kinematics ur5e_kin;
     int n_joints = ur5e_kin.num_of_joints;
@@ -120,6 +123,7 @@ void calculateKinematics(std::vector<float> ee_pose){
 
     printf("\n");
     
+
     std::vector<double> sol1 =  {0};
     std::vector<double> sol2 =  {0};
     std::vector<double> sol3 =  {0};
@@ -129,6 +133,7 @@ void calculateKinematics(std::vector<float> ee_pose){
     std::vector<double> sol7 =  {0};
     std::vector<double> sol8 =  {0};
 
+    // split solution from joint_configs into seperate vectors
     for (int i = 0; i <= joint_configs.size() - 1; i++){
         if(i < 6){
             sol1 = std::vector<double>(joint_configs.begin(), joint_configs.begin() + 6);
@@ -181,6 +186,7 @@ void calculateKinematics(std::vector<float> ee_pose){
     return;
 }
 
+/* move the arm with ur_rtde to the best found solution*/
 void moveArm(std::string ip, std::vector<float> ee_pose){
 
     calculateKinematics(ee_pose);
@@ -217,6 +223,7 @@ void moveArm(std::string ip, std::vector<float> ee_pose){
         }
     }
 
+    //move arm until the goal position is reached
     while(is_all_zero == false){
         auto t_start = high_resolution_clock::now();
 
@@ -258,7 +265,7 @@ void moveArm(std::string ip, std::vector<float> ee_pose){
 
 template<typename T>
 std::vector<double>  DivideVectorByValue(const std::vector<T>& v, const T k){
-    std::vector<double> result(v.size(), 0.0);// = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    std::vector<double> result(v.size(), 0.0);// 
     for (int i = 0; i < v.size(); ++i) {
         result.at(i) = v.at(i) / k;
     }
@@ -268,7 +275,7 @@ std::vector<double>  DivideVectorByValue(const std::vector<T>& v, const T k){
 
 template<typename T>
 std::vector<double>  MultiplyVectorByValue(const std::vector<T>& v, const T k){
-    std::vector<double> result(v.size(), 0.0);// = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    std::vector<double> result(v.size(), 0.0);// 
     for (int i = 0; i < v.size(); ++i) {
         result.at(i) = v.at(i) * k;
     }
@@ -278,7 +285,7 @@ std::vector<double>  MultiplyVectorByValue(const std::vector<T>& v, const T k){
 
 template<typename T>
 std::vector<double>  MultiplyVector(const std::vector<T>& v, const std::vector<T>& k){
-    std::vector<double> result(v.size(), 0.0);// = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    std::vector<double> result(v.size(), 0.0);// 
     for (int i = 0; i < v.size(); ++i) {
         result.at(i) = v.at(i) * k.at(i);
     }
@@ -288,7 +295,7 @@ std::vector<double>  MultiplyVector(const std::vector<T>& v, const std::vector<T
    
 template<typename T>
 std::vector<double> S(const std::vector<T>& n){
-    std::vector<double> Sn(9, 0.0);// = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    std::vector<double> Sn(9, 0.0);// 
     Sn.at(1) = n.at(2) * -1;
     Sn.at(2) = n.at(1);
     Sn.at(3) = n.at(2);
@@ -298,7 +305,7 @@ std::vector<double> S(const std::vector<T>& n){
     return Sn;
 }
 
-/*Rodrigues formula
+/* WIP Rodrigues formula
 Input: 1x3 array of rotations about x, y, and z
 Output: 3x3 rotation matrix*/
 std::vector<double> rodrigues(std::vector<double>& r){
@@ -307,11 +314,11 @@ std::vector<double> rodrigues(std::vector<double>& r){
         norm += r.at(i) * r.at(i);
     }
     double theta = norm;
-    std::vector<double> R(9, 0.0);// = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    std::vector<double> R(9, 0.0);// 
     if(theta > 1e-30){
         std::vector<double> n = DivideVectorByValue(r, theta);
         std::vector<double> Sn = S(n);
-        std::vector<double> eye(9, 0.0);// = {1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0};
+        std::vector<double> eye(9, 0.0);// 
         eye.at(0) = 1.0;
         eye.at(4) = 1.0;
         eye.at(8) = 1.0;
@@ -322,7 +329,7 @@ std::vector<double> rodrigues(std::vector<double>& r){
     else{
         std::vector<double> Sr = S(r);
         double theta2 = theta*theta;
-        std::vector<double> eye(9, 0.0);// = {1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0};
+        std::vector<double> eye(9, 0.0);// 
         eye.at(0) = 1.0;
         eye.at(4) = 1.0;
         eye.at(8) = 1.0;
