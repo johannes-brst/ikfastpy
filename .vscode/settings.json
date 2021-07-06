@@ -62,6 +62,12 @@
         "random": "cpp",
         "set": "cpp",
         "string": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "bufferobject": "cpp",
+        "image": "cpp",
+        "mixinvector": "cpp",
+        "texture": "cpp",
+        "buffered_value": "cpp",
+        "fast_back_stack": "cpp"
     }
 }

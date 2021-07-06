@@ -39,8 +39,14 @@ def rodrigues(r):
         return Sn
     theta = norm(r)
     if theta > 1e-30:
+        print("theta > 1e-30\n");
         n = r/theta
+        print("n = " + str(n) + "\n");
         Sn = S(n)
+        print("Sn = " + str(Sn) + "\n");
+        print("eye(3) + sin(theta)*Sn = " + str(eye(3) + sin(theta)*Sn) + "\n");
+        print("dot(Sn,Sn) = " + str(dot(Sn,Sn)) + "\n");
+        print("(1-cos(theta))*dot(Sn,Sn) = " + str((1-cos(theta))*dot(Sn,Sn)) + "\n");
         R = eye(3) + sin(theta)*Sn + (1-cos(theta))*dot(Sn,Sn)
     else:
         Sr = S(r)
